@@ -209,4 +209,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default { getBikeList , getBikeID };
+export { getBikeList , getBikeID };
