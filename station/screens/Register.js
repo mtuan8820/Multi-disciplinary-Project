@@ -1,13 +1,8 @@
 
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image , TouchableOpacity , SafeAreaView , TextInput , Button } from "react-native";
-
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
 import Checkbox from 'expo-checkbox';
 
-const Stack = createNativeStackNavigator();
 
 function Register1({ navigation }) {
   const [name, nameChange] = React.useState('');
@@ -242,7 +237,7 @@ function RegisterSuccess({ navigation }) {
       <View style={styles.loginNow}>
         <Button
           title="Đăng nhập ngay"
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => navigation.navigate('LoginAsCustomer')}
           radius="30"
           color="#00AF66"
           titleStyle={{
@@ -313,13 +308,6 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 65,
     height: 65,
-  },
-  navLogoMenu: {
-    position: 'absolute',
-    right: 5,
-    top: -15,
-    width: 33,
-    height: 33,
   },
   paymentLogo: {
     width: 120,

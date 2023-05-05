@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import {
   Button,
   SafeAreaView,
@@ -9,88 +9,57 @@ import {
   View,
   Image,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const Stack = createNativeStackNavigator();
-
-function Login({navigation}) {
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Đăng nhập</Text>
-        <Image style={styles.logo} source={require('../assets/logo.png')} />
-      </View>
-
-      <View style={styles.main}>
-        <Text style={styles.roleAsk}>Bạn là:</Text>
-      </View>
-
-      <View style={styles.main}>
-        <TouchableOpacity
-          style={styles.buttonRoleStyle}
-          activeOpacity={0.5}
-          onPress={() => navigation.navigate('LoginAsCustomer')}>
-          <Image
-            source={require('../assets/customer.png')}
-            style={styles.buttonImageIconStyle}
-          />
-          <Text style={styles.buttonTextStyle}>Khách hàng</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonRoleStyle}
-          activeOpacity={0.5}
-          onPress={() => navigation.navigate('LoginAsManager')}>
-          <Image
-            source={require('../assets/manager.png')}
-            style={styles.buttonImageIconStyle}
-          />
-          <Text style={styles.buttonTextStyle}>Quản lý</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.buttonRoleStyle}
-          activeOpacity={0.5}
-          onPress={() => navigation.navigate('LoginAsStaff')}>
-          <Image
-            source={require('../assets/staff.png')}
-            style={styles.buttonImageIconStyle}
-          />
-          <Text style={styles.buttonTextStyle}>Nhân viên bảo dưỡng</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
+import { useDispatch } from "react-redux";
+import { login } from "../redux/actions/auth";
 
 function LoginAsCustomer({navigation}){
-  const [username, usernameChange] = React.useState('');
-  const [password, passwordChange] = React.useState('');
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const dispatch = useDispatch();
+  
+  const onLogin = () => {
+      let user = {
+        username: username,
+        password: password,
+      };
+  dispatch(login(user))
+        .then((response) => {
+          if (response.status == "success") {
+            navigation.replace("Home");
+          }
+        })
+        .catch((error) => {
+          navigation.replace("LoginAsCustomer");
+        });
+    };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Đăng nhập</Text>
-        <Image style={styles.userLogo} source={require('../assets/customer.png')} />
       </View>
+
       <SafeAreaView>
         <TextInput
           style={styles.input}
-          onChangeText={usernameChange}
+          onChangeText={setUsername}
           value={username}
           placeholder="Tên đăng nhập"
           placeholderTextColor="white"
         />
         <TextInput
           style={styles.input}
-          onChangeText={passwordChange}
+          onChangeText={setPassword}
           value={password}
           secureTextEntry = {true}
           placeholder="Mật khẩu"
           placeholderTextColor="white"
         />
       </SafeAreaView>
+
       <View>
         <TouchableOpacity
           activeOpacity={0.5}
@@ -103,99 +72,19 @@ function LoginAsCustomer({navigation}){
           <Text style={styles.signUp}>Chưa có tài khoản? Đăng ký ngay!</Text>
         </TouchableOpacity>
       </View>
-      <View style={{flex:1,justifyContent: "center",alignItems: "center"}}>
-        <TouchableOpacity
-          style={styles.buttonLoginStyle}
-          activeOpacity={0.5}
-          onPress={() => navigation.navigate('')}>
-          <Text
-            style={{textAlignVertical:
-            "center",textAlign: "center",color:'#fff', fontSize: 20, marginLeft: 100}}>Đăng nhập</Text>
-        </TouchableOpacity>
+
+      <View style={{flex:1,justifyContent: "center",alignItems: "center"}}> 
+        <Button
+          title="Đăng nhập"
+          onPress={() => onLogin()}
+          radius="30"
+          color="#00AF66"
+        />     
       </View>
     </View>
   );
 }
 
-function LoginAsManager({navigation}){
-  const [username, usernameChange] = React.useState('');
-  const [password, passwordChange] = React.useState('');
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Đăng nhập</Text>
-        <Image style={styles.userLogo} source={require('../assets/manager.png')} />
-      </View>
-      <SafeAreaView>
-        <TextInput
-          style={styles.input}
-          onChangeText={usernameChange}
-          value={username}
-          placeholder="Tên đăng nhập"
-          placeholderTextColor="white"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={passwordChange}
-          value={password}
-          secureTextEntry = {true}
-          placeholder="Mật khẩu"
-          placeholderTextColor="white"
-        />
-      </SafeAreaView>
-      <View style={{flex:1,justifyContent: "center",alignItems: "center"}}>
-        <TouchableOpacity
-          style={styles.buttonLoginStyle}
-          activeOpacity={0.5}
-          onPress={() => navigation.navigate('')}>
-          <Text
-            style={{textAlignVertical:
-            "center",textAlign: "center",color:'#fff', fontSize: 20, marginLeft: 100}}>Đăng nhập</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
-
-function LoginAsStaff({navigation}){
-  const [username, usernameChange] = React.useState('');
-  const [password, passwordChange] = React.useState('');
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Đăng nhập</Text>
-        <Image style={styles.userLogo} source={require('../assets/staff.png')} />
-      </View>
-      <SafeAreaView>
-        <TextInput
-          style={styles.input}
-          onChangeText={usernameChange}
-          value={username}
-          placeholder="Tên đăng nhập"
-          placeholderTextColor="white"
-        />
-        <TextInput
-          style={styles.input}
-          onChangeText={passwordChange}
-          value={password}
-          secureTextEntry = {true}
-          placeholder="Mật khẩu"
-          placeholderTextColor="white"
-        />
-      </SafeAreaView>
-      <View style={{flex:1,justifyContent: "center",alignItems: "center"}}>
-        <TouchableOpacity
-          style={styles.buttonLoginStyle}
-          activeOpacity={0.5}
-          onPress={() => navigation.navigate('')}>
-          <Text
-            style={{textAlignVertical:
-            "center",textAlign: "center",color:'#fff', fontSize: 20, marginLeft: 100}}>Đăng nhập</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   header: {
@@ -224,13 +113,6 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     backgroundColor: '#00AF66',
     color: 'white',
-  },
-  navLogoMenu: {
-    position: 'absolute',
-    right: 5,
-    top: -15,
-    width: 33,
-    height: 33,
   },
   logo:{
     width: 100,
@@ -294,4 +176,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { Login , LoginAsCustomer , LoginAsManager , LoginAsStaff};
+export { LoginAsCustomer };
